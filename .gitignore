@@ -1,5 +1,6 @@
 .eslinterc.json
 config.json
 node_modules/
+client_secret.json
 guilleminault-christian.jpg
 google-sheets-node/
