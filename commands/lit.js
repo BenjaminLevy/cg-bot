@@ -33,6 +33,15 @@ module.exports = {
 		  console.log(sheet.cellStats); // total cells, loaded, how many non-empty
 		  const a1 = sheet.getCell(1, 0); // access cells using a zero-based index
 		  console.log(sheet.getCell(1, 0).value);
+
+			if(keyword == "help"){
+				let allKeywords = [];
+				for(let i = 0; i <= rows.length; i++){
+			    allKeywords += sheet.getCell(i,0).value + ", ";
+				}
+				message.channel.send(`Here are all the keywords you can use with !cg: ${allKeywords}`);
+			}
+
 		  for(let i = 0; i <= rows.length; i++){
 		    let currentCell = sheet.getCell(i,0)
 		    if(currentCell.value == keyword){
