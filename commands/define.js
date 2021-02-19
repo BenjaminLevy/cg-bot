@@ -1,5 +1,6 @@
 module.exports = {
 	name: 'define',
+	aliases: ['d'],
 	description: 'Defines acronyms',
 
 	execute(message, args) {
