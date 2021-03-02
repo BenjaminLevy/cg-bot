@@ -11,13 +11,15 @@ module.exports = {
 	const inputID = args[0]
 
   const url = args[0]
-	console.log(url);
 		fetch(url)
       .then(res => res.text()) // parse response as JSON
       .then(html => {
 				let doiPosition = html.indexOf('doi');
 				let doiEnd = (html.length - doiPosition) * (-1)
 				console.log(doiPosition);
+				if(doiPosition === -1){
+					return message.channel.send(`Error: \'doi\' position of - 1`)
+				}
 				let doiRaw = html.slice(doiPosition + 4, doiPosition + 100)
 				console.log(doiRaw);
 				let commaPosition = doiRaw.indexOf(',')
@@ -32,6 +34,7 @@ module.exports = {
 			})
       .catch(err => {
           console.log(`error ${err}`)
+					message.channel.send(`Error: ${err}`);
       });
 
 	},
