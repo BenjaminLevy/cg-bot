@@ -5,7 +5,7 @@ module.exports = {
 	execute(message, args) {
 
 		const keyword = args[0].toLowerCase()
-
+		const memeChannels = ['memes','off-topic','vent']
 		const { GoogleSpreadsheet } = require('../node_modules/google-spreadsheet');
 		const creds = require('../client_secret.json');
 
@@ -29,7 +29,7 @@ module.exports = {
 		  console.log(sheet.title);
 		  console.log(sheet.rowCount);
 
-		  await sheet.loadCells('A1:F31'); // loads a range of cells
+		  await sheet.loadCells('A1:C45'); // loads a range of cells
 		  console.log(sheet.cellStats); // total cells, loaded, how many non-empty
 		  const a1 = sheet.getCell(1, 0); // access cells using a zero-based index
 		  console.log(sheet.getCell(1, 0).value);
@@ -41,11 +41,16 @@ module.exports = {
 				}
 				message.channel.send(`Here are all the keywords you can use with !cg: ${allKeywords}`);
 			}
-
+			console.log(message.channel.name)
 		  for(let i = 0; i <= rows.length; i++){
 		    let currentCell = sheet.getCell(i,0)
-		    if(currentCell.value == keyword){
-		      message.channel.send(sheet.getCell(i,1).value);
+				let memeCellObject = sheet.getCell(i, 2)
+				let memeCellValue = memeCellObject.value
+		    if(currentCell.value === keyword){
+					console.log(memeCellValue)
+					console.log( memeChannels.indexOf(message.channel.name))
+					if(memeCellValue === 0 && memeChannels.indexOf(message.channel.name) == -1){return}
+					else{message.channel.send(sheet.getCell(i,1).value);}
 		    }
 		      }
 			//TODO add condition for keyword not found
