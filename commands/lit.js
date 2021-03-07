@@ -37,7 +37,9 @@ module.exports = {
 			if(keyword == "help"){
 				let allKeywords = [];
 				for(let i = 0; i <= rows.length; i++){
-			    allKeywords += sheet.getCell(i,0).value + ", ";
+					if(sheet.getCell(i,2).value !== 0){
+			    	allKeywords += sheet.getCell(i,0).value + ", ";
+					}
 				}
 				message.channel.send(`Here are all the keywords you can use with !cg: ${allKeywords}`);
 			}
