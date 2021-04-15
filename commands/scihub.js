@@ -1,16 +1,19 @@
+
 module.exports = {
 		name: 'scihub',
 		aliases: ['s'],
 	description: 'takes pubmed link and returns scihub link',
 	args: true,
 	execute(message, args) {
-	const fetch = require("../node_modules/node-fetch");
-	// const urlPubmed = new URL(args[0]);
-	// let inputID = urlPubmed.pathname.slice(1, -1)
+		var HTMLParser = require('node-html-parser')
+		// import { parse } from 'node-html-parser';
+		const fetch = require("../node_modules/node-fetch");
+		// const urlPubmed = new URL(args[0]);
+		// let inputID = urlPubmed.pathname.slice(1, -1)
 
-	const inputID = args[0]
+		const inputID = args[0]
 
-  const url = args[0]
+	  const url = args[0]
 		fetch(url)
       .then(res => res.text()) // parse response as JSON
       .then(html => {
@@ -28,11 +31,20 @@ module.exports = {
 				// let urlNoSlashes = urlPubmed.pathname.slice(1, -1)
 				// console.log(`https://sci-hub.do/${urlNoSlashes}`);
 				// let doi = (data.records[0].doi);
-       message.channel.send(`https://sci-hub.do/${doi}`);
-
-
+       return fetch(`https://sci-hub.do/${doi}`)
 			})
-      .catch(err => {
+			.then(res => {
+				console.log(res.status);
+				return res.text()
+			})
+			.then(html => {
+				const root = HTMLParser.parse(html);
+				let citation = (root.querySelector('#citation').innerHTML);
+				authorAndYear = citation.split("<i>").shift()
+				console.log(authorAndYear)
+				console.log(citation)
+			})
+			.catch(err => {
           console.log(`error ${err}`)
 					message.channel.send(`Error: ${err}`);
       });

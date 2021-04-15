@@ -1,8 +1,9 @@
 .eslinterc.json
 config.json
 node_modules/
-client_secret.json
 guilleminault-christian.jpg
 google-sheets-node/
 bryansBrowserClip
 LaunchBot.bat
+client-secret-main-bot/
+client_secret.json
