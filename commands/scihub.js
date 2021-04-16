@@ -5,6 +5,7 @@ module.exports = {
 	description: 'takes pubmed link and returns scihub link',
 	args: true,
 	execute(message, args) {
+		const Discord = require('discord.js');
 		var HTMLParser = require('node-html-parser')
 		// import { parse } from 'node-html-parser';
 		const fetch = require("../node_modules/node-fetch");
@@ -14,9 +15,20 @@ module.exports = {
 		const inputID = args[0]
 
 	  const url = args[0]
+		let scihubUrl = ""
+		let doi = ""
+		let abstract = ""
+
 		fetch(url)
       .then(res => res.text()) // parse response as JSON
       .then(html => {
+				const root = HTMLParser.parse(html);
+				abstract = (root.querySelector('#enc-abstract').innerText);
+				abstract = abstract.replace(/(\n)/g, "-")
+				if(abstract.length > 2000){
+					abstract = abstract.substr(0, 2000) + "..."
+				}
+				console.dir(abstract)
 				let doiPosition = html.indexOf('doi');
 				let doiEnd = (html.length - doiPosition) * (-1)
 				console.log(doiPosition);
@@ -26,11 +38,12 @@ module.exports = {
 				let doiRaw = html.slice(doiPosition + 4, doiPosition + 100)
 				console.log(doiRaw);
 				let commaPosition = doiRaw.indexOf(',')
-				let doi = doiRaw.slice(0, commaPosition)
+				doi = doiRaw.slice(0, commaPosition)
 				// const urlPubmed = new URL(args[0]);
 				// let urlNoSlashes = urlPubmed.pathname.slice(1, -1)
 				// console.log(`https://sci-hub.do/${urlNoSlashes}`);
 				// let doi = (data.records[0].doi);
+			 	scihubUrl = `https://sci-hub.do/${doi}`
        return fetch(`https://sci-hub.do/${doi}`)
 			})
 			.then(res => {
@@ -40,9 +53,34 @@ module.exports = {
 			.then(html => {
 				const root = HTMLParser.parse(html);
 				let citation = (root.querySelector('#citation').innerHTML);
-				authorAndYear = citation.split("<i>").shift()
+				let citationArr = citation.split("<i>").join("_!_").split("</i>").join("_!_").split("_!_")
+				console.table(citationArr)
+				const [authorAndYear, title] = [citationArr[0], citationArr[1]];
 				console.log(authorAndYear)
-				console.log(citation)
+				console.log(title);
+
+
+
+				const exampleEmbed = new Discord.MessageEmbed()
+				.setColor('#0099ff')
+				.setTitle(title)
+				.setURL(scihubUrl)
+				.setAuthor(authorAndYear)
+				.setDescription(abstract)
+				// .setThumbnail('https://i.imgur.com/wSTFkRM.png')
+				.addFields(
+					{ name: 'DOI', value: doi },
+					// { name: '\u200B', value: '\u200B' },
+					// { name: 'Inline field title', value: 'Some value here', inline: true },
+					// { name: 'Inline field title', value: 'Some value here', inline: true },
+				)
+				// .addField('Inline field title', 'Some value here', true)
+				// .setImage('https://i.imgur.com/wSTFkRM.png')
+				.setTimestamp()
+				// .setFooter('Bot by blonskie');
+
+			message.channel.send(exampleEmbed);
+
 			})
 			.catch(err => {
           console.log(`error ${err}`)
