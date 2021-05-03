@@ -21,6 +21,9 @@ client.once('ready', () => {
 	console.log('Ready!');
 });
 
+const list = client.guilds.get("803429347750576138");
+list.members.fetch().then(members => console.log(members))
+
 client.on(
   'message', message => {
 	if (!message.content.startsWith(prefix) || message.author.bot) return;

@@ -29,7 +29,7 @@ module.exports = {
 		  // console.log(sheet.title);
 		  // console.log(sheet.rowCount);
 
-		  await sheet.loadCells('A1:C45'); // loads a range of cells
+		  await sheet.loadCells('A1:C65'); // loads a range of cells
 		  console.log(sheet.cellStats); // total cells, loaded, how many non-empty
 		  const a1 = sheet.getCell(1, 0); // access cells using a zero-based index
 		  console.log(sheet.getCell(1, 0).value);
