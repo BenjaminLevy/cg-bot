@@ -19,10 +19,23 @@ const cooldowns = new Discord.Collection();
 
 client.once('ready', () => {
 	console.log('Ready!');
+	let server = client.guilds.cache.get("803429347750576138");
+	try{
+	console.log(server.members.cache.forEach(m => console.log(m.user.id + " " + m.user.username)))
+	} catch (error) {
+		console.error(error);
+	}
 });
 
-const list = client.guilds.get("803429347750576138");
-list.members.fetch().then(members => console.log(members))
+// const list = client.guilds.cache.get("803429347750576138");
+// console.log(list.members.cache.array());
+
+
+
+// Go through each of the members, and console.log() their name
+ 
+
+// list.members.fetch().then(members => console.log(members))
 
 client.on(
   'message', message => {

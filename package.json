@@ -12,6 +12,7 @@
   "dependencies": {
     "discord.js": "^12.5.1",
     "eslint": "^7.18.0",
+    "flat-cache": "^3.0.4",
     "google-spreadsheet": "^3.1.15",
     "node-fetch": "^2.6.1",
     "node-html-parser": "^3.1.5",
