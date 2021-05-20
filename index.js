@@ -1,7 +1,9 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
+const flatCache = require('flat-cache');
 
+const cache = flatCache.load('userCache5');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -21,7 +23,25 @@ client.once('ready', () => {
 	console.log('Ready!');
 	let server = client.guilds.cache.get("803429347750576138");
 	try{
-	console.log(server.members.cache.forEach(m => console.log(m.user.id + " " + m.user.username)))
+	server.members.cache.forEach(function (m){
+		let oldUsernames = cache.getKey(m.user.id)
+		console.log(oldUsernames)
+		if(cache.getKey(m.user.id) === undefined){
+			
+			cache.setKey(m.user.id, [{user: m.user.username, date: Date()}])
+
+		}
+		else if(oldUsernames[0].user !== m.user.username){
+			oldUsernames.unshift({user: m.user.username, date: Date()})
+			cache.setKey(m.user.id, oldUsernames)
+		
+		}
+		else
+		console.log(`${m.user.id} has their old name`);
+		})
+	console.log('Cache complete');
+	console.log(cache.all())
+	cache.save()
 	} catch (error) {
 		console.error(error);
 	}
@@ -43,10 +63,6 @@ client.on(
 
 	const args = message.content.slice(prefix.length).trim().split(' ');
 	const commandName = args.shift().toLowerCase();
-
-	// if (!client.commands.has(commandName)) return;
-	//
-	// const command = client.commands.get(commandName);
 
 	const command = client.commands.get(commandName)
 	|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
