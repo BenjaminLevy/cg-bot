@@ -56,6 +56,21 @@ client.once('ready', () => {
  
 
 // list.members.fetch().then(members => console.log(members))
+const cron = require('cron');
+
+let counter = 0
+let scheduledMessage = new cron.CronJob('0 * * * * *', () => {
+  // This runs every day at 10:30:00, you can do anything you want
+  	const guild = client.guilds.cache.get('803429347750576138');
+	const channel = guild.channels.cache.get('831411449426477057');
+  channel.send(counter);
+  counter += 1
+});
+
+
+// When you want to start it, use:
+scheduledMessage.start()
+
 
 client.on(
   'message', message => {

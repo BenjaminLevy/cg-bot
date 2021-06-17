@@ -64,7 +64,6 @@ module.exports = {
 				const exampleEmbed = new Discord.MessageEmbed()
 				.setColor('#0099ff')
 				.setTitle(title)
-				.setURL(scihubUrl)
 				.setAuthor(authorAndYear)
 				.setDescription(abstract)
 				// .setThumbnail('https://i.imgur.com/wSTFkRM.png')
