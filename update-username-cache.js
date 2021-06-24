@@ -1,5 +1,6 @@
 const flatCache = require('flat-cache');
 const cache = flatCache.load('userCache8');
+const { userHistoryChannelID } = require('./config.json')
 
 module.exports = function (client){
     let guild = client.guilds.cache.get("803429347750576138");
@@ -20,7 +21,7 @@ module.exports = function (client){
 			cache.setKey(m.user.id, oldUsernames)
 			let newUsername = cache.getKey(m.user.id)[0].user
 			console.log(`CHANGED...${newUsername}`);
-			const channel = guild.channels.cache.get('831411449426477057');
+			const channel = guild.channels.cache.get(userHistoryChannelID);
   			channel.send(`CHANGED: ${previousUsername} is now ${newUsername}`);
 		}
 		else{

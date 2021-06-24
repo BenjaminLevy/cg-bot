@@ -38,7 +38,7 @@ client.once('ready', () => {
 const cron = require('cron');
 
 let counter = 0
-let scheduledMessage = new cron.CronJob('* 0 * * * *', () => {
+let scheduledMessage = new cron.CronJob('* 5 * * * *', () => {
   // This runs every day at 10:30:00, you can do anything you want
   	usernameCacheFunction(client)
 	console.log('cache updated ' + Date());
