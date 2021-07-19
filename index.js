@@ -45,7 +45,7 @@ let counter = 0
 
 
 // When you want to start it, use:
-scheduledMessage.start()
+// scheduledMessage.start()
 
 
 client.on(
