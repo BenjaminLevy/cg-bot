@@ -22,7 +22,7 @@ const cooldowns = new Discord.Collection();
 
 client.once('ready', () => {
 	console.log('Ready!');
-	usernameCacheFunction(client)
+	// usernameCacheFunction(client)
 
 });
 
@@ -38,11 +38,10 @@ client.once('ready', () => {
 const cron = require('cron');
 
 let counter = 0
-let scheduledMessage = new cron.CronJob('* 00 * * * *', () => {
-  // This runs every day at 10:30:00, you can do anything you want
-  	usernameCacheFunction(client)
-	console.log('cache updated ' + Date());
-});
+// let scheduledMessage = new cron.CronJob('* 00 * * * *', () => {
+//   	usernameCacheFunction(client)
+// 	console.log('cache updated ' + Date());
+// });
 
 
 // When you want to start it, use:
