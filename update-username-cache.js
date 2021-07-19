@@ -1,9 +1,9 @@
 const flatCache = require('flat-cache');
-const cache = flatCache.load('userCache8');
+const cache = flatCache.load('freshCache');
 const { userHistoryChannelID } = require('./config.json')
 
 module.exports = function (client){
-    let guild = client.guilds.cache.get("803429347750576138");
+    let guild = client.guilds.cache.get("731543013846941736");
 	try{
 	guild.members.cache.forEach(function (m){
 		let oldUsernames = cache.getKey(m.user.id)
@@ -26,6 +26,7 @@ module.exports = function (client){
 		}
 		else{
 			let allNames = cache.getKey(m.user.id);
+			console.log("username cache else")
 			for(let i = 0; i < allNames.length; i++){
 				console.log(allNames[i].user);
 			}
