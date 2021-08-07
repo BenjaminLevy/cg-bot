@@ -1,3 +1,5 @@
+const { googleSpreadsheetID } = require('../config.json');
+
 module.exports = {
 	name: 'define',
 	aliases: ['d'],
@@ -11,7 +13,7 @@ module.exports = {
 		const creds = require('../client_secret.json');
 
 		// spreadsheet key is the long id in the sheets URL
-		const doc = new GoogleSpreadsheet('1HilYjsIQIIAWtqxJktlkYn8zP_lwvlzlSkZB-IOkT1w');
+		const doc = new GoogleSpreadsheet(googleSpreadsheetID);
 
 		async function accessSpreadsheet() {
 		  await doc.useServiceAccountAuth({
@@ -24,18 +26,9 @@ module.exports = {
 
 		  const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id]
 		  const rows = await sheet.getRows();
-		  const c6 = sheet.getCellByA1
-
-		  await sheet.loadCells('A1:F56'); // loads a range of cells
-		  // console.log(sheet.getCell(1, 0).value);
-
-			// if(keyword == "help"){
-			// 	let allKeywords = [];
-			// 	for(let i = 0; i <= rows.length; i++){
-			//     allKeywords += sheet.getCell(i,0).value + ", ";
-			// 	}
-			// 	message.channel.send(`Here are all the keywords you can use with !cg: ${allKeywords}`);
-			// }
+		  
+		  await sheet.loadCells('A1:F200'); // loads a range of cells
+	
 
 		  for(let i = 0; i <= rows.length; i++){
 		    let currentCell = sheet.getCell(i,1)
@@ -43,7 +36,7 @@ module.exports = {
 		      message.channel.send(sheet.getCell(i,2).value);
 		    }
 		      }
-			//TODO add condition for keyword not found
+				//TODO add condition for keyword not found
 
 		}
 
@@ -52,4 +45,3 @@ module.exports = {
 };
 
 
-// accesssSpreadsheet();
