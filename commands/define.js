@@ -1,4 +1,4 @@
-const { googleSpreadsheetID } = require('../config.json');
+const { defineGoogleSheetID } = require('../config.json');
 
 module.exports = {
 	name: 'define',
@@ -13,7 +13,7 @@ module.exports = {
 		const creds = require('../client_secret.json');
 
 		// spreadsheet key is the long id in the sheets URL
-		const doc = new GoogleSpreadsheet(googleSpreadsheetID);
+		const doc = new GoogleSpreadsheet(defineGoogleSheetID);
 
 		async function accessSpreadsheet() {
 		  await doc.useServiceAccountAuth({
