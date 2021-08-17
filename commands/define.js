@@ -31,10 +31,16 @@ module.exports = {
 	
 
 		  for(let i = 0; i <= rows.length; i++){
+			let acronymFound = false;
 		    let currentCell = sheet.getCell(i,1)
 		    if(currentCell.value.toLowerCase().trim() == keyword){
-		      message.channel.send(sheet.getCell(i,2).value);
-		    }
+		      	message.channel.send(sheet.getCell(i,2).value);
+				acronymFound = true;
+				break
+			}
+			if(i == rows.length && acronymFound == false){
+				message.channel.send("I'm sorry, I'm not familiar with that acronym.");
+			}
 		      }
 				//TODO add condition for keyword not found
 
