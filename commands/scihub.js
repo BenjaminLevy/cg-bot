@@ -9,10 +9,7 @@ module.exports = {
 		var HTMLParser = require('node-html-parser')
 		// import { parse } from 'node-html-parser';
 		const fetch = require("../node_modules/node-fetch");
-		// const urlPubmed = new URL(args[0]);
-		// let inputID = urlPubmed.pathname.slice(1, -1)
 
-		const inputID = args[0]
 
 	  const url = args[0]
 		let scihubUrl = ""
@@ -30,7 +27,6 @@ module.exports = {
 				}
 				console.dir(abstract)
 				let doiPosition = html.indexOf('doi');
-				let doiEnd = (html.length - doiPosition) * (-1)
 				console.log(doiPosition);
 				if(doiPosition === -1){
 					return message.channel.send(`Error: \'doi\' position of - 1`)
@@ -39,11 +35,6 @@ module.exports = {
 				console.log(doiRaw);
 				let commaPosition = doiRaw.indexOf(',')
 				doi = doiRaw.slice(0, commaPosition)
-				// const urlPubmed = new URL(args[0]);
-				// let urlNoSlashes = urlPubmed.pathname.slice(1, -1)
-				// console.log(`https://sci-hub.do/${urlNoSlashes}`);
-				// let doi = (data.records[0].doi);
-			 	scihubUrl = `https://sci-hub.do/${doi}`
        return fetch(`https://sci-hub.do/${doi}`)
 			})
 			.then(res => {
