@@ -42,7 +42,8 @@ module.exports = {
 				message.channel.send("I'm sorry, I'm not familiar with that acronym.");
 			}
 		      }
-				//TODO add condition for keyword not found
+			/*TODO speed this up with either binary search (regenerate tree with a chron job or trigger on spreadsheet update)
+			  or terminate search when current word letters > user input*/
 
 		}
 
