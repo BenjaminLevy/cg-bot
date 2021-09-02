@@ -1,12 +1,14 @@
 const fs = require('fs');
 const Discord = require('discord.js');
+const { Intents } = require('discord.js')
 const { prefix, token } = require('./config.json');
+const cron = require('cron');
 
-const usernameCacheFunction = require('./update-username-cache') 
+const updateUsernameCache = require('./update-username-cache') 
 
 
 
-const client = new Discord.Client();
+const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS] });
 client.commands = new Discord.Collection();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
@@ -22,7 +24,7 @@ const cooldowns = new Discord.Collection();
 
 client.once('ready', () => {
 	console.log('Ready!');
-	// usernameCacheFunction(client)
+	updateUsernameCache(client)
 
 });
 
@@ -35,11 +37,10 @@ client.once('ready', () => {
  
 
 // list.members.fetch().then(members => console.log(members))
-const cron = require('cron');
 
 let counter = 0
 // let scheduledMessage = new cron.CronJob('* 00 * * * *', () => {
-//   	usernameCacheFunction(client)
+//   	updateUsernameCache(client)
 // 	console.log('cache updated ' + Date());
 // });
 
