@@ -19,16 +19,20 @@ module.exports = function (client){
   .then(item => item.forEach(checkUsernameAgainstCache))
   .catch(console.error); 
 }
-
+/* In the cache each value is an array named "usernameArray".
+The most recent username is held at the 0th index. */
 function checkUsernameAgainstCache(value, key, map){
   
 let username = map.get(key).user.username
 let id = map.get(key).user.id
 
-console.log("99999999999999999999999999999999999999999")
+if(cache.getKey(id) === undefined){
+  let usernameArray = [username]
+  cache.setKey(id, usernameArray)
 }
+console.log(`Username: ${username} Id: ${id}`)
 
-
+}
 // module.exports = function (client){
 //     let guild = client.guilds.cache.get("731543013846941736");
 // 	try{
