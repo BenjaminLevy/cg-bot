@@ -1,10 +1,10 @@
 const flatCache = require('flat-cache');
-const cache = flatCache.load('freshCache01');
+const cache = flatCache.load('freshCache02');
 const { userHistoryChannelID, serverID } = require('./config.json')
 
 
 
-module.exports = function (client){
+module.exports = async function entireCache(client){
 
     let guild = client.guilds.cache.get(serverID);
 	// let str = "Members:\n";
@@ -23,14 +23,34 @@ module.exports = function (client){
 The most recent username is held at the 0th index. */
 function checkUsernameAgainstCache(value, key, map){
   
-let username = map.get(key).user.username
-let id = map.get(key).user.id
+let username = map.get(key).user.username;
+let id = map.get(key).user.id;
+console.log(id + '...' + username)
+//Returns array of usernames
+let cachedUsernameArray = cache.getKey(id);
+console.log(cachedUsernameArray)
+console.log(cache.all())
 
-if(cache.getKey(id) === undefined){
+//Sets cachedUsedname to most recent username in cachedUsernameArray
+// let cachedUsername = cachedUsernameArray[0]
+
+/* If id is not in cache, insert into cache with
+ the id as key and array with username as value */
+if(cachedUsernameArray === undefined){
   let usernameArray = [username]
   cache.setKey(id, usernameArray)
+  console.log(`NEW username: ${username}`)
+  cache.save()
+  console.log(cache.all())
 }
-console.log(`Username: ${username} Id: ${id}`)
+else if(cachedUsernameArray[0] != username){
+  cachedUsernameArray.unshift(username);
+  cache.setKey(id, cachedUsernameArray);
+  console.log(`CHANGED username: ${cachedUsernameArray[1]} is now ${cachedUsernameArray[0]}`)
+  cache.save()
+
+}
+// console.log(`Username: ${username} Id: ${id}`)
 
 }
 // module.exports = function (client){
