@@ -4,7 +4,7 @@ const { userHistoryChannelID, serverID } = require('./config.json')
 
 
 
-module.exports = async function entireCache(client){
+module.exports = async function (client){
 
     let guild = client.guilds.cache.get(serverID);
 	// let str = "Members:\n";
@@ -15,9 +15,8 @@ module.exports = async function entireCache(client){
 
   //  });
   //  console.log( str );
- guild.members.fetch()
-  .then(item => item.forEach(checkUsernameAgainstCache))
-  .catch(console.error); 
+ let members = await guild.members.fetch()
+  console.log(members)
 }
 /* In the cache each value is an array named "usernameArray".
 The most recent username is held at the 0th index. */
