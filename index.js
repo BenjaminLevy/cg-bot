@@ -25,7 +25,18 @@ const cooldowns = new Discord.Collection();
 client.once('ready', () => {
 	console.log('Ready!');
 	updateUsernameCache(client)
+		// .catch((errors) => {
+		// 	console.log(errors)
+		// })
 
+});
+
+client.on("guildMemberUpdate", function(oldMember, newMember){
+	updateUsernameCache(client, newMember)
+		// .catch((errors) => {
+		// 	console.log(errors)
+		// })
+	
 });
 
 // const list = client.guilds.cache.get("803429347750576138");
@@ -47,7 +58,6 @@ let counter = 0
 
 // When you want to start it, use:
 // scheduledMessage.start()
-
 
 client.on(
   'message', message => {
