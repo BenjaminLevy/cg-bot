@@ -5,10 +5,9 @@ module.exports = {
 	aliases: ['d'],
 	description: 'Defines acronyms',
 
-	execute(message, args) {
-
+	async execute(message, args) {
+		
 		const keyword = args[0].toLowerCase()
-
 		const { GoogleSpreadsheet } = require('../node_modules/google-spreadsheet');
 		const creds = require('../client_secret.json');
 

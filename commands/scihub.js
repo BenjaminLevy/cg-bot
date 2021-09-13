@@ -1,24 +1,24 @@
 
 module.exports = {
-		name: 'scihub',
-		aliases: ['s'],
+	name: 'scihub',
+	aliases: ['s'],
 	description: 'takes pubmed link and returns scihub link',
 	args: true,
-	execute(message, args) {
+	excute(message, args) {
 		const Discord = require('discord.js');
-		var HTMLParser = require('node-html-parser')
+		var HTMLParser = require('node-html-parser');
 		// import { parse } from 'node-html-parser';
 		const fetch = require("../node_modules/node-fetch");
 
 
-	  const url = args[0]
+		const url = args[0]
 		let scihubUrl = ""
 		let doi = ""
 		let abstract = ""
 
 		fetch(url)
-      .then(res => res.text()) // parse response as JSON
-      .then(html => {
+		.then(res => res.text()) // parse response as JSON
+     	.then(html => {
 				const root = HTMLParser.parse(html);
 				abstract = (root.querySelector('#enc-abstract').innerText);
 				abstract = abstract.replace(/(\n)/g, "-")
