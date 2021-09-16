@@ -4,7 +4,7 @@ module.exports = {
 	aliases: ['s'],
 	description: 'takes pubmed link and returns scihub link',
 	args: true,
-	excute(message, args) {
+	async excute(message, args) {
 		const Discord = require('discord.js');
 		var HTMLParser = require('node-html-parser');
 		// import { parse } from 'node-html-parser';
