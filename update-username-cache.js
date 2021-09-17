@@ -8,7 +8,6 @@ const { userHistoryChannelID, serverID } = require('./config.json')
 //Changing name while bot offline -- what does this do? Makes all other names appear new? What happens if you cache.save() without pruning? ie cache.save(true)
 
 module.exports = async function (client, GuildMember = undefined){
-  console.log(cache.all())
   if(!GuildMember) {
     
     let guild = client.guilds.cache.get(serverID);
@@ -51,9 +50,8 @@ async function checkUser(client, GuildMember){
       cache.setKey(id, cachedUsernameArray);
       console.log(`CHANGED username: "${cachedUsernameArray[1]}" is now "${cachedUsernameArray[0]}"`)
     }
-    else(console.log(`not changed: ${cachedUsernameArray[0]}`))
+    // else(console.log(`not changed: ${cachedUsernameArray[0]}`))
   
-    console.log(cache.all())
   
 }
   // async function checkAllUsers(client){

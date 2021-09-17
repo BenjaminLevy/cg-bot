@@ -1,66 +1,70 @@
+const Discord = require('../node_modules/discord.js');
 
 module.exports = {
 	name: 'scihub',
 	aliases: ['s'],
 	description: 'takes pubmed link and returns scihub link',
 	args: true,
-	async excute(message, args) {
-		const Discord = require('discord.js');
-		var HTMLParser = require('node-html-parser');
-		// import { parse } from 'node-html-parser';
+	async execute(message, args) {
+		const HTMLParser = require('node-html-parser');
 		const fetch = require("../node_modules/node-fetch");
 
 
-		const url = args[0]
-		let scihubUrl = ""
-		let doi = ""
-		let abstract = ""
+		/*If second argument (domain arg) is provided, use it as Scihub top-level domain.
+		Else, default to domain defined in config.json*/
+		const scihubTopLevelDomain = args[1] ? args[1] : require('../config.json').scihubTopLevelDomain;
+		
+		try{
+			const url = args[0]
+			let res = await fetch(url);
+			res = await res.text();
 
-		fetch(url)
-		.then(res => res.text()) // parse response as JSON
-     	.then(html => {
-				const root = HTMLParser.parse(html);
-				abstract = (root.querySelector('#enc-abstract').innerText);
-				abstract = abstract.replace(/(\n)/g, "-")
-				if(abstract.length > 2000){
-					abstract = abstract.substr(0, 2000) + "..."
-				}
-				console.dir(abstract)
-				let doiPosition = html.indexOf('doi');
-				console.log(doiPosition);
-				if(doiPosition === -1){
-					return message.channel.send(`Error: \'doi\' position of - 1`)
-				}
-				let doiRaw = html.slice(doiPosition + 4, doiPosition + 100)
-				console.log(doiRaw);
-				let commaPosition = doiRaw.indexOf(',')
-				doi = doiRaw.slice(0, commaPosition)
-       return fetch(`https://sci-hub.do/${doi}`)
-			})
-			.then(res => {
-				console.log(res.status);
-				return res.text()
-			})
-			.then(html => {
-				const root = HTMLParser.parse(html);
-				let citation = (root.querySelector('#citation').innerHTML);
-				let citationArr = citation.split("<i>").join("_!_").split("</i>").join("_!_").split("_!_")
-				console.table(citationArr)
-				const [authorAndYear, title] = [citationArr[0], citationArr[1]];
-				console.log(authorAndYear)
-				console.log(title);
+			const root = HTMLParser.parse(res);
+			const paper = new Paper(root, scihubTopLevelDomain)
+			console.log(paper);
+			message.channel.send(paper.createEmbed())
 
+		}
+		catch (error){
+			console.log(error)	
+		}
+		
 
+	},
+};
 
-				const exampleEmbed = new Discord.MessageEmbed()
+class Paper{
+
+	
+
+	constructor(root, scihubTopLevelDomain){
+		
+		this.abstract = root.querySelector('#enc-abstract').querySelector('p').innerText
+
+		this.title = root.querySelector('meta[name="citation_title"]')._attrs.content
+		this.doi = root.querySelector('meta[name="citation_doi"]')._attrs.content
+		this.date = root.querySelector('meta[name="citation_date"]')._attrs.content
+		this.authors = root.querySelector('meta[name="citation_authors"]')._attrs.content
+		this.journal = root.querySelector('meta[name="citation_journal_title"]')._attrs.content
+		this.pmid = root.querySelector('meta[name="citation_pmid"]')._attrs.content
+
+		this.scihubTopLevelDomain = scihubTopLevelDomain;
+
+	}
+
+	createEmbed(){
+		const embed = new Discord.MessageEmbed()
 				.setColor('#0099ff')
-				.setTitle(title)
-				.setAuthor(authorAndYear)
-				.setDescription(abstract)
+				.setTitle(this.title)
+				.setURL(`https://sci-hub.${this.scihubTopLevelDomain}/${this.doi}`)
+				.setAuthor(`${this.authors} ${this.date}`)
+				.setDescription(
+					this.abstract.length > 2000 ? this.abstract.substr(0, 2000) + "..." : this.abstract
+					)
 				// .setThumbnail('https://i.imgur.com/wSTFkRM.png')
 				.addFields(
-					{ name: 'DOI', value: doi },
-					// { name: '\u200B', value: '\u200B' },
+					{ name: 'DOI', value: this.doi, },
+					{ name: 'PMID', value: this.pmid },
 					// { name: 'Inline field title', value: 'Some value here', inline: true },
 					// { name: 'Inline field title', value: 'Some value here', inline: true },
 				)
@@ -69,41 +73,6 @@ module.exports = {
 				.setTimestamp()
 				// .setFooter('Bot by blonskie');
 
-			message.channel.send(exampleEmbed);
-
-			})
-			.catch(err => {
-          console.log(`error ${err}`)
-					message.channel.send(`Error: ${err}`);
-      });
-
-	},
-};
-
-// <span class="citation-doi">
-// 			 doi: 10.1016/j.sleep.2018.09.008.
-// 		 </span>
-
- // <span class="docsum-journal-citation full-journal-citation">Otolaryngol Head Neck Surg. 2015 Sep;153(3):326-33. doi: 10.1177/0194599815594374. Epub 2015 Jul 16.</span>
-
-//
-// 	message.channel.send(`first argument ${args[0]}`);
-// }
-// else if (command === 'avatar') {
-// 	if (!message.mentions.users.size) {
-// 		return message.channel.send(`Your avatar: <${message.author.displayAvatarURL({ format: "png", dynamic: true })}>`);
-// 	}
-// 	const avatarList = message.mentions.users.map(user => {
-// 	return `${user.username}'s avatar: <${user.displayAvatarURL({ format: "png", dynamic: true })}>`;
-// 	});
-// 	console.log(avatarList);
-//
-// 	// send the entire array of strings as a message
-// 	// by default, discord.js will `.join()` the array with `\n`
-// 	message.channel.send(avatarList);
-//
-// // ...
-// }
-
-
-// `https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/?tool=my_tool&email=my_email@example.com&ids=${inputedID}`
+			return(embed)
+	}
+}
