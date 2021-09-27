@@ -41,6 +41,7 @@ client.on("guildMemberUpdate", function(oldMember, newMember){
 
 //TODO trigger updateUsernameCache when a guild member joins the server
 
+
 // const list = client.guilds.cache.get("803429347750576138");
 // console.log(list.members.cache.array());
 
