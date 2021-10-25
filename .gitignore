@@ -1,6 +1,7 @@
 .eslinterc.json
 config.json
 node_modules/
+npm-debug.log
 guilleminault-christian.jpg
 google-sheets-node/
 bryansBrowserClip
