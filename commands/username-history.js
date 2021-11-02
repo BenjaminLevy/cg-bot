@@ -1,6 +1,7 @@
 const flatCache = require('flat-cache');
 const cache = flatCache.load('freshCache');
-const { userHistoryChannelID } = require('../config.json');
+// const { userHistoryChannelID } = require('../config.json');
+const userHistoryChannelID = process.env.userHistoryChannelID;
 const Discord = require('discord.js');
 module.exports = {
 	name: 'history',

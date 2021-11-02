@@ -12,7 +12,7 @@ module.exports = {
 
 		/*If second argument (domain arg) is provided, use it as Scihub top-level domain.
 		Else, default to domain defined in config.json*/
-		const scihubTopLevelDomain = args[1] ? args[1] : require('../config.json').scihubTopLevelDomain;
+		const scihubTopLevelDomain = args[1] ? args[1] : process.env.scihubTopLevelDomain 
 		
 		try{
 			const url = args[0]
