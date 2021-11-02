@@ -1,7 +1,8 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const { Intents } = require('discord.js')
-const { prefix, token } = require('./config.json');
+const { prefix } = require('./config.json');
+const token = process.env.token;
 const cron = require('cron');
 
 const updateUsernameCache = require('./update-username-cache') 
