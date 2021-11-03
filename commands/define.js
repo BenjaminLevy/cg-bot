@@ -1,4 +1,4 @@
-const { defineGoogleSheetID } = require('../config.json');
+// const { defineGoogleSheetID } = require('../config.json');
 const defineGoogleSheetID = process.env.defineGoogleSheetID;
 
 module.exports = {
