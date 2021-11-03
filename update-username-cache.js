@@ -1,7 +1,8 @@
 var flatCache = require('flat-cache');
 const cache = flatCache.load('freshCache02');
-const { userHistoryChannelID, serverID } = require('./config.json')
-
+// const { , serverID } = require('./config.json')
+const userHistoryChannelID = process.env.userHistoryChannelID;
+const serverID = process.env.serverID;
 
 //TODO add error handling
 //TODO remove repitition
