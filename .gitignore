@@ -9,3 +9,6 @@ LaunchBot.bat
 client-secret-main-bot/
 client_secret.json
 .env
+.vscode/
+Dockerfile
+Jenkinsfile
