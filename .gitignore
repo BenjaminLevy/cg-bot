@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-.eslinterc.json
-config.json
-node_modules/
-guilleminault-christian.jpg
-google-sheets-node/
-bryansBrowserClip
-LaunchBot.bat
-client-secret-main-bot/
-client_secret.json
-=======
 .eslinterc.json
 config.json
 node_modules/
@@ -19,4 +8,4 @@ bryansBrowserClip
 LaunchBot.bat
 client-secret-main-bot/
 client_secret.json
->>>>>>> refactor
+.env
