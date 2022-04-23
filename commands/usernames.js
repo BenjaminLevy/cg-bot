@@ -1,7 +1,7 @@
 const { Channel } = require("discord.js");
 
 const flatCache = require('flat-cache');
-const cache = flatCache.load('freshCache');
+const cache = flatCache.load('username-cache');
 
 module.exports = {
 	name: 'usernames',

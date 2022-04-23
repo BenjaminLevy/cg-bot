@@ -1,6 +1,5 @@
 const flatCache = require('flat-cache');
-const cache = flatCache.load('freshCache');
-// const { userHistoryChannelID } = require('../config.json');
+const cache = flatCache.load('username-cache');
 const userHistoryChannelID = process.env.userHistoryChannelID;
 const Discord = require('discord.js');
 module.exports = {
@@ -13,11 +12,14 @@ module.exports = {
 		const client = new Discord.Client();
 		let user = message.mentions.users.first()
 		if(!user) return;
+		console.log(user.id)
 		let usersPastNamesArr = cache.getKey(user.id);
 		let messageToSend = '```'
+		console.log(usersPastNamesArr);
 		for(let i = 0; i < usersPastNamesArr.length; i++){
-			messageToSend += (usersPastNamesArr[i].user + '....' + usersPastNamesArr[i].date + '\n')
+			messageToSend += (usersPastNamesArr + '\n')
 		}
+		console.log(messageToSend)
 		messageToSend += '```'
 		alertChannel.send(messageToSend)
 	}
