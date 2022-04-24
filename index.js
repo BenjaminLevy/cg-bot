@@ -2,7 +2,6 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const { Intents } = require('discord.js')
 require('dotenv').config()
-console.log(process.env)
 const prefix = process.env.prefix;
 const token = process.env.token;
 const cron = require('cron');

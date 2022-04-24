@@ -7,15 +7,14 @@ module.exports = {
 		const keyword = args[0].toLowerCase()
 		const memeChannels = ['memes','off-topic','vent']
 		const { GoogleSpreadsheet } = require('../node_modules/google-spreadsheet');
-		const creds = require('../client_secret.json');
 
 		// spreadsheet key is the long id in the sheets URL
 		const doc = new GoogleSpreadsheet('1GstwtiZD1VXkM7VgmK9MnRyVsEjRp35FSXIute3BHeo');
 
 		async function accessSpreadsheet() {
 		  await doc.useServiceAccountAuth({
-		    client_email: creds.client_email,
-		    private_key: creds.private_key,
+		    client_email: process.env.client_email,
+		    private_key: process.env.private_key,
 		  });
 
 		  await doc.loadInfo(); // loads document properties and worksheets
