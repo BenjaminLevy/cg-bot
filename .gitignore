@@ -8,6 +8,7 @@ bryansBrowserClip
 LaunchBot.bat
 client-secret-main-bot/
 client_secret.json
+*.env
 .env
 .vscode/
 Dockerfile
