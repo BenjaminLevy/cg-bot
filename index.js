@@ -9,7 +9,7 @@ const cron = require('cron');
 
 console.log(prefix)
 
-const updateUsernameCache = require('./update-username-cache') 
+// const updateUsernameCache = require('./update-username-cache') 
 
 
 
@@ -29,11 +29,11 @@ const cooldowns = new Discord.Collection();
 
 client.once('ready', () => {
 	console.log('Ready!');
-	updateUsernameCache(client);
+	// updateUsernameCache(client);
 });
 
 client.on("guildMemberUpdate", function(oldMember, newMember){
-	updateUsernameCache(client, newMember)
+	// updateUsernameCache(client, newMember)
 		// .catch((errors) => {
 		// 	console.log(errors)
 		// })
@@ -42,7 +42,7 @@ client.on("guildMemberUpdate", function(oldMember, newMember){
 
 //TODO trigger updateUsernameCache when a guild member joins the server
 client.on("guildMemberAdd", function(newMember){
-	updateUsernameCache(client, newMember)
+	// updateUsernameCache(client, newMember)
 });
 
 // const list = client.guilds.cache.get("803429347750576138");
