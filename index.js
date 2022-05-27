@@ -6,7 +6,6 @@ const prefix = process.env.prefix;
 const token = process.env.token;
 const cron = require('cron');
 
-console.log(prefix)
 
 // const updateUsernameCache = require('./update-username-cache') 
 
@@ -27,7 +26,7 @@ const cooldowns = new Discord.Collection();
 
 
 client.once('ready', () => {
-	console.log('Ready!');
+	console.log('I am ready!');
 	// updateUsernameCache(client);
 });
 
