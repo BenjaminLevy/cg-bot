@@ -1,12 +1,17 @@
+const isDevelopment = process.env.NODE_ENV === "development"
+console.log(`NODE_ENV === ${process.env.NODE_ENV}`)
 const fs = require('fs');
 const Discord = require('discord.js');
 const { Intents } = require('discord.js')
-require('dotenv').config()
+if (isDevelopment) {
+  require('dotenv').config();
+}
 const prefix = process.env.prefix;
 const token = process.env.token;
 const cron = require('cron');
+const getSecrets = require('./utils/get-aws-secrets')
 
-
+getSecrets.run()
 // const updateUsernameCache = require('./update-username-cache') 
 
 
