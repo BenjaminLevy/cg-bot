@@ -11,7 +11,7 @@ const token = process.env.token;
 const cron = require('cron');
 const getSecrets = require('./utils/get-aws-secrets')
 
-getSecrets.run()
+// getSecrets.run()
 // const updateUsernameCache = require('./update-username-cache') 
 
 
