@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=development AWS_REGION=us-east-1 node index.js",
+    "debug": "NODE_ENV=development AWS_REGION=us-east-1 node --inspect index.js",
+    "prod": "AWS_REGION=us-east-1 node index.js",
     "dev": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,20 +1,29 @@
 var AWS = require('aws-sdk'),
-    secretName = "test",
     secret,
-    decodedBinarySecret;
+    //Not currently in use
+    decodedBinarySecret,
+    secretName = "development"
+
 
 // Create a Secrets Manager client
 var client = new AWS.SecretsManager({
     region: process.env.AWS_REGION
 });
+console.log(process.env.AWS_REGION)
 
-console.log("hi there");
-// In this sample we only handle the specific exceptions for the 'GetSecretValue' API.
 // See https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
 // We rethrow the exception by default.
 
-client.getSecretValue({SecretId: secretName}, function(err, data) {
+function getAWSSecrets(){    
+    console.log("this was called!!")
+    console.log(secretName)
+    client.getSecretValue({SecretId: secretName}, function(err, data) {
+    console.log("and this!")
+        console.log(data)
+        console.log("data ^^^");
     if (err) {
+    console.log("error in here")
+        console.log(err)
         if (err.code === 'DecryptionFailureException')
             // Secrets Manager can't decrypt the protected secret text using the provided KMS key.
             // Deal with the exception here, and/or rethrow at your discretion.
@@ -37,55 +46,21 @@ client.getSecretValue({SecretId: secretName}, function(err, data) {
             throw err;
     }
     else {
-        // Decrypts secret using the associated KMS CMK.
+        // Decrypts secret using the associated KMS key.
         // Depending on whether the secret is a string or binary, one of these fields will be populated.
         if ('SecretString' in data) {
             secret = data.SecretString;
-            console.log(JSON.parse(secret));
-            console.log("string")
         } else {
-            let buff = new Buffer(data.SecretBinary, 'base64');
+            let buff = new Buffer.from(data.SecretBinary, 'base64');
             decodedBinarySecret = buff.toString('ascii');
-            console.log(decodedBinarySecret);
         }
     }
-    
-    // Your code goes here. 
+    console.log(secret)
+    console.log("that's inside ^^^");
 });
+console.log(secret)
+    // return JSON.parse(secret)
+   return "" 
+}
 
-// const SDK = require("aws-sdk").SecretsManager
-// const Buffer  = require("node:buffer")
-
-// console.log(SDK)
-// // process.env.AWS_REGION must be set in command line when starting the application.
-// // const secretsClient = new SecretsManagerClient({ region: process.env.AWS_REGION });
-
-// // Set the parameters
-// const params = {
-//   SecretId: "arn:aws:secretsmanager:us-east-1:962596043005:secret:test-jd4iwd", //e.g. arn:aws:secretsmanager:REGION:XXXXXXXXXXXX:secret:mysecret-XXXXXX
-// };
-
-// const run = async () => {
-//   let data;
-//   try {
-//     data = await secretsClient.send(new GetSecretValueCommand(params));
-//     console.log("data", data);
-//     return data; // For unit tests.
-//   } catch (err) {
-//     console.log("err", err);
-//   }
-//   let secret;
-//   if ("SecretString" in data) {
-//     secret = data.SecretString;
-//   } else {
-//     console.log("else:", data);
-
-//     // Create a buffer
-//     const buff = new Buffer.from(data.SecretBinary, "base64");
-//     secret = buff.toString("ascii");
-//   }
-//   console.log(secret);
-// };
-// run();
-
-// module.exports = {run, params}
+module.exports = {getAWSSecrets}

@@ -6,12 +6,14 @@ const { Intents } = require('discord.js')
 if (isDevelopment) {
   require('dotenv').config();
 }
-const prefix = process.env.prefix;
-const token = process.env.token;
+const {getAWSSecrets}= require('./utils/get-aws-secrets')
+const secretsJSON = getAWSSecrets()
+console.log(secretsJSON);
+console.log(getAWSSecrets())
+const discordToken = secretsJSON.discordToken
 const cron = require('cron');
-const getSecrets = require('./utils/get-aws-secrets')
 
-// getSecrets.run()
+const prefix = "!"
 // const updateUsernameCache = require('./update-username-cache') 
 
 
@@ -96,4 +98,4 @@ client.on(
 	});
 
 
-client.login(token);
+client.login(discordToken);
