@@ -9,22 +9,16 @@ var AWS = require('aws-sdk'),
 var client = new AWS.SecretsManager({
     region: process.env.AWS_REGION
 });
-console.log(process.env.AWS_REGION)
 
 // See https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
 // We rethrow the exception by default.
 
-async function getAWSSecrets(){    
-    console.log("this was called!!")
-    console.log(secretName)
-    try{
-        client.getSecretValue({SecretId: secretName}, function(err, data) {
-    console.log("and this!")
-        console.log(data)
-        console.log("data ^^^");
+function getAWSSecrets(){    
+    return new Promise((resolve, reject) => {
+        
+    client.getSecretValue({SecretId: secretName}, function(err, data) {
     if (err) {
     console.log("error in here")
-        console.log(err)
         if (err.code === 'DecryptionFailureException')
             // Secrets Manager can't decrypt the protected secret text using the provided KMS key.
             // Deal with the exception here, and/or rethrow at your discretion.
@@ -55,18 +49,10 @@ async function getAWSSecrets(){
             let buff = new Buffer.from(data.SecretBinary, 'base64');
             decodedBinarySecret = buff.toString('ascii');
         }
-    
+    resolve(secret)
     }
 });
-}catch (e){
-    console.log("hello")
-}
-    console.log(secret)
-    console.log("that's inside ^^^");
-
-console.log(secret)
-    // return JSON.parse(secret)
-   return "" 
+})
 }
 
 module.exports = {getAWSSecrets}

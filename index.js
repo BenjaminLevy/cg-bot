@@ -7,9 +7,16 @@ if (isDevelopment) {
   require('dotenv').config();
 }
 const {getAWSSecrets}= require('./utils/get-aws-secrets')
-const secretsJSON = await getAWSSecrets()
-console.log(secretsJSON);
-const discordToken = secretsJSON.discordToken
+getAWSSecrets()
+	.then(res => {
+		console.log(res)
+	})
+	.catch(err => {
+		console.log(err)
+	})
+	
+	
+//const discordToken = secretsJSON.discordToken
 const cron = require('cron');
 
 const prefix = "!"
