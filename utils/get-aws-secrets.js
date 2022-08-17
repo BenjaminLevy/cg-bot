@@ -14,10 +14,11 @@ console.log(process.env.AWS_REGION)
 // See https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
 // We rethrow the exception by default.
 
-function getAWSSecrets(){    
+async function getAWSSecrets(){    
     console.log("this was called!!")
     console.log(secretName)
-    client.getSecretValue({SecretId: secretName}, function(err, data) {
+    try{
+        client.getSecretValue({SecretId: secretName}, function(err, data) {
     console.log("and this!")
         console.log(data)
         console.log("data ^^^");
@@ -54,10 +55,15 @@ function getAWSSecrets(){
             let buff = new Buffer.from(data.SecretBinary, 'base64');
             decodedBinarySecret = buff.toString('ascii');
         }
+    
     }
+});
+}catch (e){
+    console.log("hello")
+}
     console.log(secret)
     console.log("that's inside ^^^");
-});
+
 console.log(secret)
     // return JSON.parse(secret)
    return "" 

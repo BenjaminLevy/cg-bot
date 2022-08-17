@@ -7,9 +7,8 @@ if (isDevelopment) {
   require('dotenv').config();
 }
 const {getAWSSecrets}= require('./utils/get-aws-secrets')
-const secretsJSON = getAWSSecrets()
+const secretsJSON = await getAWSSecrets()
 console.log(secretsJSON);
-console.log(getAWSSecrets())
 const discordToken = secretsJSON.discordToken
 const cron = require('cron');
 
@@ -97,5 +96,5 @@ client.on(
 
 	});
 
-
-client.login(discordToken);
+console.log("ABOUT TO PASS TOKEN!")
+//client.login(discordToken);
