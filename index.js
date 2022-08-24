@@ -113,6 +113,4 @@ process.on('uncaughtException', exitHandler);
 process.on('unhandledRejection', exitHandler);
 process.on('SIGINT', exitHandler)
 process.on('SIGTERM', exitHandler)
-process.on('SIGKILL', exitHandler)
 
-//client.login(discordToken);
