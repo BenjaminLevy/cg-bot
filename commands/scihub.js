@@ -22,12 +22,12 @@ module.exports = {
 
 			const root = HTMLParser.parse(res);
 			const paper = new Paper(root, scihubTopLevelDomain)
-			console.log(paper);
+			logger.debug(paper);
 			message.channel.send(paper.createEmbed())
 
 		}
 		catch (error){
-			console.log(error)	
+			logger.error(error)	
 		}
 		
 

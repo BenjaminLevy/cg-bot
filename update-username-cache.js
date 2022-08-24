@@ -1,4 +1,5 @@
 var flatCache = require('flat-cache');
+const logger = require('./utils/logger');
 const cache = flatCache.load('username-cache');
 const userHistoryChannelID = process.env.userHistoryChannelID;
 const serverID = process.env.serverID;
@@ -36,22 +37,22 @@ async function checkUser(client, GuildMember){
     
     //Returns array of user's past usernames
     let cachedUsernameArray = await cache.getKey(id);
-    console.log(`Cached username array:${cachedUsernameArray}`)
+    logger.debug(`Cached username array:${cachedUsernameArray}`)
     /* If id is not in cache, insert into cache with
     the id as key and array with username as value */
     if(cachedUsernameArray === undefined){
       let usernameArray = [username]
       await cache.setKey(id, usernameArray)
       client.channels.cache.get(userHistoryChannelID).send(`NEW username: ${username}`)
-      console.log(`NEW username: ${username}`) 
+      logger.info(`NEW username: ${username}`) 
     }
     else if(cachedUsernameArray[0] != username){
       cachedUsernameArray.unshift(username);
-      console.log(`here's the username array before being set as a key${cachedUsernameArray}`)
+      logger.debug(`here's the username array before being set as a key${cachedUsernameArray}`)
       await cache.setKey(id, cachedUsernameArray);
-       console.log(`cache.getKey(id): ${cache.getKey(id)}`)
+       logger.debug(`cache.getKey(id): ${cache.getKey(id)}`)
       client.channels.cache.get(userHistoryChannelID).send(`CHANGED username: "${cachedUsernameArray[1]}" is now "${cachedUsernameArray[0]}"`);
-      console.log(`CHANGED username: "${cachedUsernameArray[1]}" is now "${cachedUsernameArray[0]}"`);
+      logger.info(`CHANGED username: "${cachedUsernameArray[1]}" is now "${cachedUsernameArray[0]}"`);
     }
 
     cache.save()
