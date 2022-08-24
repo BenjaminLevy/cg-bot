@@ -12,14 +12,14 @@ module.exports = {
 		const client = new Discord.Client();
 		let user = message.mentions.users.first()
 		if(!user) return;
-		console.log(user.id)
+		logger.debug(user.id)
 		let usersPastNamesArr = cache.getKey(user.id);
 		let messageToSend = '```'
-		console.log(usersPastNamesArr);
+		logger.debug(usersPastNamesArr);
 		for(let i = 0; i < usersPastNamesArr.length; i++){
 			messageToSend += (usersPastNamesArr + '\n')
 		}
-		console.log(messageToSend)
+		logger.debug(messageToSend)
 		messageToSend += '```'
 		alertChannel.send(messageToSend)
 	}

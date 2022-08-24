@@ -7,7 +7,7 @@ module.exports = {
 	name: 'usernames',
 	description: 'Fetches history of usernames',
 	execute(message, args) {
-		console.log(cache.all())	
+		logger.debug(cache.all())	
 		
 	},
 };

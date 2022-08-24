@@ -1,21 +1,38 @@
+const isDevelopment = process.env.NODE_ENV === "development"
+const logger = require('./utils/logger')
+logger.info(`NODE_ENV === ${process.env.NODE_ENV}`)
 const fs = require('fs');
 const Discord = require('discord.js');
 const { Intents } = require('discord.js')
-require('dotenv').config()
-const prefix = process.env.prefix;
-const token = process.env.token;
+if (isDevelopment) {
+  require('dotenv').config();
+}
+//const discordToken = secretsJSON.discordToken
 const cron = require('cron');
-
-
+const terminate = require('./utils/terminate')
+const prefix = "!"
 // const updateUsernameCache = require('./update-username-cache') 
 
 
 
 const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS] });
+const getAWSSecrets = require('./utils/getAWSSecrets')
+let secretsJSON
+getAWSSecrets()
+	.then(res => JSON.parse(res))
+	.then(data => {
+		secretsJSON = data
+	})
+	.then(() => {
+		client.login(secretsJSON.discordToken)
+	})
+	.catch(err => {
+		console.log(err)
+	})
+	
+	
 client.commands = new Discord.Collection();
-
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.name, command);
@@ -44,7 +61,7 @@ client.on("guildMemberAdd", function(newMember){
 });
 
 // const list = client.guilds.cache.get("803429347750576138");
-// console.log(list.members.cache.array());
+// logger.debug(list.members.cache.array());
 
 
 
@@ -90,5 +107,10 @@ client.on(
 
 	});
 
+const exitHandler = terminate(client)
 
-client.login(token);
+process.on('uncaughtException', exitHandler);
+process.on('unhandledRejection', exitHandler);
+process.on('SIGINT', exitHandler)
+process.on('SIGTERM', exitHandler)
+

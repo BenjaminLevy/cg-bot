@@ -4,21 +4,28 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node -r dotenv/config index.js",
+    "start": "NODE_ENV=development AWS_REGION=us-east-1 node index.js | npx pino-pretty",
+    "debug": "NODE_ENV=development AWS_REGION=us-east-1 node --inspect index.js | npx pino-pretty",
+    "prod": "AWS_REGION=us-east-1 node index.js | npx pino-pretty",
+    "dev": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1194.0",
     "cron": "^1.8.2",
     "discord.js": "^12.5.1",
-    "dotenv": "^10.0.0",
-    "eslint": "^7.32.0",
+    "dotenv": "^16.0.1",
     "flat-cache": "^3.0.4",
     "google-spreadsheet": "^3.3.0",
     "node-fetch": "^2.6.7",
     "node-html-parser": "^3.1.5",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "pino": "^8.4.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.22.0"
   }
 }

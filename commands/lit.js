@@ -18,15 +18,15 @@ module.exports = {
 		  });
 
 		  await doc.loadInfo(); // loads document properties and worksheets
-		  console.log(doc.title);
+		  logger.debug(doc.title);
 
 
 		  const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id]
 		  const rows = await sheet.getRows();
 
 		  await sheet.loadCells('A1:C65'); // loads a range of cells
-		  console.log(sheet.cellStats); // total cells, loaded, how many non-empty
-		  console.log(sheet.getCell(1, 0).value);
+		  logger.debug(sheet.cellStats); // total cells, loaded, how many non-empty
+		  logger.debug(sheet.getCell(1, 0).value);
 
 			if(keyword == "help"){
 				let allKeywords = [];
@@ -37,14 +37,14 @@ module.exports = {
 				}
 				message.channel.send(`Here are all the keywords you can use with !cg: ${allKeywords}`);
 			}
-			console.log(message.channel.name)
+			logger.debug(message.channel.name)
 		  for(let i = 0; i <= rows.length; i++){
 		    let currentCell = sheet.getCell(i,0)
 				let memeCellObject = sheet.getCell(i, 2)
 				let memeCellValue = memeCellObject.value
 		    if(currentCell.value === keyword){
-					console.log(memeCellValue)
-					console.log( memeChannels.indexOf(message.channel.name))
+					logger.debug(memeCellValue)
+					logger.debug( memeChannels.indexOf(message.channel.name))
 					if(memeCellValue === 0 && memeChannels.indexOf(message.channel.name) == -1){return}
 					else{message.channel.send(sheet.getCell(i,1).value);}
 		    }
