@@ -9,7 +9,7 @@ if (isDevelopment) {
 }
 //const discordToken = secretsJSON.discordToken
 const cron = require('cron');
-
+const terminate = require('./utils/terminate')
 const prefix = "!"
 // const updateUsernameCache = require('./update-username-cache') 
 
@@ -107,18 +107,12 @@ client.on(
 
 	});
 
-process.on('uncaughtException', (err) => {
-  logger.error(err);
-  process.exit(1);
-});
+const exitHandler = terminate(client)
 
-process.on('unhandledRejection', (err) => {
-  logger.error(err);
-  process.exit(1);
-});
-
-(() => {
-	throw new Error("hello!")
-})();
+process.on('uncaughtException', exitHandler);
+process.on('unhandledRejection', exitHandler);
+process.on('SIGINT', exitHandler)
+process.on('SIGTERM', exitHandler)
+process.on('SIGKILL', exitHandler)
 
 //client.login(discordToken);
