@@ -27,7 +27,7 @@ getAWSSecrets()
 		client.login(secretsJSON.discordToken)
 	})
 	.catch(err => {
-		console.log(err)
+		logger.error(err)
 	})
 	
 	
@@ -43,14 +43,14 @@ const cooldowns = new Discord.Collection();
 
 
 client.once('ready', () => {
-	console.log('I am ready!');
+	logger.info('I am ready!');
 	// updateUsernameCache(client);
 });
 
 client.on("guildMemberUpdate", function(oldMember, newMember){
 	// updateUsernameCache(client, newMember)
 		// .catch((errors) => {
-		// 	console.log(errors)
+		// 	logger.error(errors)
 		// })
 	
 });
@@ -68,12 +68,12 @@ client.on("guildMemberAdd", function(newMember){
 // Go through each of the members, and console.log() their name
  
 
-// list.members.fetch().then(members => console.log(members))
+// list.members.fetch().then(members => logger.info(members))
 
 let counter = 0
 // let scheduledMessage = new cron.CronJob('* 00 * * * *', () => {
 //   	updateUsernameCache(client)
-// 	console.log('cache updated ' + Date());
+// 	logger.info('cache updated ' + Date());
 // });
 
 
@@ -99,7 +99,7 @@ client.on(
 	try {
 	command.execute(message, args);
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		message.reply('Error:' + error);
 	}
 
