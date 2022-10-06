@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  InstanceType:
+    Description: WebServer EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+    ConstraintDescription: currently only allowed value is t2.micro, as it's on free tier
+Mappings:
+  AWSInstanceType2Arch:
+    t1.micro:
+      Arch: HVM64
+  AWSRegionArch2AMI:
+    us-east-1:
+      HVM64: ami-0130c3a072f3832ff
+Resources:
+    InstanceSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupDescription: Cloudflare egress restrictions
+        SecurityGroupEgress:
+          - IpProtocol: tcp
+            FromPort: 1024
+            ToPort: 65535
+            CidrIp: 162.159.138.0/24
+    WebServer:
+        Type: AWS::EC2::Instance
+        Properties:
+          ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, Arch]]      
+          InstanceType: !Ref InstanceType
+          SecurityGroups:
+            - !Ref InstanceSecurityGroup
+          UserData:
+            Fn::Base64: !Sub |
+               #!/bin/bash -xe
+               yum update -y aws-cfn-bootstrap
+               /opt/aws/bin/cfn-init -v --stack ${AWS::StackId} --resource WebServer --configsets wordpress_install --region ${AWS::Region}
+               /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WebServer --region ${AWS::Region}
+          HibernationOptions:
+            Configured: true
+          IamInstanceProfile: 
+            #tbd. use AWS::IAM::InstanceProfile to set this up
+#TODO Secrets Manager
+#TODO IAM role
+#TODO Github actions CD
