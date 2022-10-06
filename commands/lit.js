@@ -1,3 +1,5 @@
+const logger = require("../utils/logger")
+
 module.exports = {
 	name: 'cg',
 	description: 'Finds literature from keyword and sends as message in channel',
