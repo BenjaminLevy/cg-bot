@@ -1,5 +1,6 @@
 //This import necessary? TODO test without this
 const Discord = require('../node_modules/discord.js');
+const logger = require("../utils/logger")
 
 module.exports = {
 	name: 'scihub',

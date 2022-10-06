@@ -2,6 +2,7 @@ const flatCache = require('flat-cache');
 const cache = flatCache.load('username-cache');
 const userHistoryChannelID = process.env.userHistoryChannelID;
 const Discord = require('discord.js');
+const logger = require("../utils/logger")
 module.exports = {
 	name: 'history',
 	aliases: ['h'],
