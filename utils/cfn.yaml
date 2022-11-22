@@ -1,0 +1,156 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  InstanceType:
+    Description: WebServer EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+    ConstraintDescription: currently only allowed value is t2.micro, as it's on free tier
+Mappings:
+  AWSInstanceType2Arch:
+    t2.micro:
+      Arch: HVM64
+  AWSRegionArch2AMI:
+    us-east-1:
+      HVM64: ami-026b57f3c383c2eec
+        #ami-0130c3a072f3832ff
+Resources:
+    # InstanceSecurityGroup:
+    #   Type: AWS::EC2::SecurityGroup
+    #   Properties:
+    #     GroupDescription: Cloudflare egress restrictions
+    #     SecurityGroupEgress:
+    #       - IpProtocol: tcp
+    #         FromPort: 1024
+    #         ToPort: 65535
+    #         CidrIp: 162.159.138.0/24
+    WebServer:
+        Type: AWS::EC2::Instance
+        Metadata:
+          'AWS::CloudFormation::Init':
+            config:
+              packages:
+                yum:
+                  nodejs16: []
+                  git: []
+              files: 
+                /cgbot/deploy.sh: 
+                  content: !Sub |
+                    #! /bin/bash
+                    git pull https://github.com/BenjaminLevy/cg-bot.git;
+                    npm install; 
+                    npm start;
+                mode: "000700"
+                owner: "ec2-user"
+                group: "ec2-user"
+                /etc/systemd/system/cgbot.service:
+                  content: !Sub |
+                    [Unit]
+                    Description=CG Bot
+                    Documentation=https://github.com/BenjaminLevy/cg-bot
+                    After=network.target
+
+                    [Service]
+                    Environment=NODE_PORT=3001
+                    Type=exec
+                    User=ec2-user
+                    ExecStart=/usr/bin/node /home/ec2-user/cgbot
+                    Restart=on-failure
+
+                    [Install]
+                    WantedBy=multi-user.target 
+                /etc/cfn/cfn-hup.conf:
+                  content: !Join 
+                    - ''
+                    - - |
+                        [main]
+                      - stack=
+                      - !Ref 'AWS::StackId'
+                      - |+
+
+                      - region=
+                      - !Ref 'AWS::Region'
+                      - |+
+
+                  mode: '000400'
+                  owner: root
+                  group: root
+                /etc/cfn/hooks.d/cfn-auto-reloader.conf:
+                  content: !Join 
+                    - ''
+                    - - |
+                        [cfn-auto-reloader-hook]
+                      - |
+                        triggers=post.update
+                      - >
+                        path=Resources.WebServer.Metadata.AWS::CloudFormation::Init
+                      - 'action=/opt/aws/bin/cfn-init -v '
+                      - '         --stack '
+                      - !Ref 'AWS::StackName'
+                      - '         --resource WebServer'
+                      - '         --configsets config '
+                      - '         --region '
+                      - !Ref 'AWS::Region'
+                      - |+
+
+                      - |
+                        runas=root
+                  mode: "000600"
+                  owner: "ec2-user"
+                  group: "ec2-user"
+              commands:
+                01_mkdir:
+                  command: "mkdir ./cgbot"
+                  cwd: "~"
+                  ignoreErrors: "false"
+                02_pull:
+                  command: "git pull https://github.com/BenjaminLevy/cg-bot.git"
+                  cwd: "~/cgbot"
+                  ignoreErrors: "false"
+                03_npm_install:
+                 command: "npm install"
+                 cwd: "~/cgbot"
+                 ignoreErrors: "false"
+              services:
+                systemd:
+                  cgbot:
+                    enabled: "true"
+                    ensureRunning: "true"
+                    packages:
+                      yum:
+                        - "node"
+        Properties:
+          ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, Arch]]      
+          InstanceType: !Ref InstanceType
+          # SecurityGroups:
+          #   - !Ref InstanceSecurityGroup
+          UserData: !Base64 
+            'Fn::Sub':
+              - >
+                #!/bin/bash -xe
+                
+                yum install -y aws-cfn-bootstrap 
+
+                # Install the files and packages from the metadata
+
+                /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource WebServer
+                --region ${AWS::Region}
+                
+                #Specify config sets?
+
+                # Signal the status from cfn-init
+
+                /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource
+                WebServer --region ${AWS::Region}
+              - {}
+              #IamInstanceProfile: 
+            #tbd. use AWS::IAM::InstanceProfile to set this up
+#TODO Run script to install NPM
+#TODO Create script which will pull from github and deploy with systemd
+#TODO Run above script
+#TODO Secrets Manager
+#TODO IAM role
+#TODO Github actions CD
+#TODO iam roles and cloudwatch agent so you can monitor logs
+# and any additional services to support this functionality
