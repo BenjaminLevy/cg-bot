@@ -25,6 +25,35 @@ Resources:
     #         FromPort: 1024
     #         ToPort: 65535
     #         CidrIp: 162.159.138.0/24
+    SecretsManagerRole:
+      Type: AWS::IAM::Policy
+      Properties: 
+        Groups:
+          - !Ref CFNUserGroup
+        PolicyDocument: 
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'cloudformation:Describe*'
+                - 'cloudformation:List*'
+                - 'cloudformation:Get*'
+              Resource: '*'
+    MySecretResourcePolicy:
+      Type: AWS::SecretsManager::ResourcePolicy
+      Properties:
+        BlockPublicPolicy: True
+        SecretId:
+          Ref: MySecret
+        ResourcePolicy:
+          Version: '2012-10-17'
+          Statement:
+          - Resource: "*"
+            Action: secretsmanager:DeleteSecret
+            Effect: Deny
+            Principal:
+              AWS:
+                Fn::Sub: arn:aws:iam::${AWS::AccountId}:root
     WebServer:
         Type: AWS::EC2::Instance
         Metadata:
