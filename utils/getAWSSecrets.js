@@ -1,3 +1,4 @@
+const logger = require('./logger')
 var AWS = require('aws-sdk'),
     secret,
     //Not currently in use

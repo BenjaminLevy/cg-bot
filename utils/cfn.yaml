@@ -25,6 +25,20 @@ Resources:
     #         FromPort: 1024
     #         ToPort: 65535
     #         CidrIp: 162.159.138.0/24
+    SecretsManagerRole:
+      Type: AWS::IAM::Policy
+      Properties: 
+        Groups:
+          - !Ref CFNUserGroup
+        PolicyDocument: 
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'cloudformation:Describe*'
+                - 'cloudformation:List*'
+                - 'cloudformation:Get*'
+              Resource: '*'
     WebServer:
         Type: AWS::EC2::Instance
         Metadata:
