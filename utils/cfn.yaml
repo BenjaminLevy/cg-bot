@@ -39,21 +39,6 @@ Resources:
                 - 'cloudformation:List*'
                 - 'cloudformation:Get*'
               Resource: '*'
-    MySecretResourcePolicy:
-      Type: AWS::SecretsManager::ResourcePolicy
-      Properties:
-        BlockPublicPolicy: True
-        SecretId:
-          Ref: MySecret
-        ResourcePolicy:
-          Version: '2012-10-17'
-          Statement:
-          - Resource: "*"
-            Action: secretsmanager:DeleteSecret
-            Effect: Deny
-            Principal:
-              AWS:
-                Fn::Sub: arn:aws:iam::${AWS::AccountId}:root
     WebServer:
         Type: AWS::EC2::Instance
         Metadata:
