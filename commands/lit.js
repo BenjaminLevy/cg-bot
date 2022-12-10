@@ -1,11 +1,15 @@
-const logger = require("../utils/logger")
+const logger = require("../utils/logger").child({command: 'lit'})
 
 module.exports = {
 	name: 'cg',
 	description: 'Finds literature from keyword and sends as message in channel',
 
 	execute(message, args) {
-
+		logger.info({
+			message: message,
+			args: args
+		})
+	try{	
 		const keyword = args[0].toLowerCase()
 		const memeChannels = ['memes','off-topic','vent']
 		const { GoogleSpreadsheet } = require('../node_modules/google-spreadsheet');
@@ -16,7 +20,7 @@ module.exports = {
 		async function accessSpreadsheet() {
 		  await doc.useServiceAccountAuth({
 		    client_email: process.env.client_email,
-		    private_key: process.env.private_key,
+		    private_key: process.env.private_key.replace(/\\n/g, "\n")
 		  });
 
 		  await doc.loadInfo(); // loads document properties and worksheets
@@ -56,6 +60,10 @@ module.exports = {
 		}
 
 		accessSpreadsheet();
+	} catch (e) {
+		logger.error(e)
+	}
+
 	},
 };
 
