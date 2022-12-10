@@ -24,27 +24,28 @@ module.exports = {
 		  });
 
 		  await doc.loadInfo(); // loads document properties and worksheets
-		  logger.debug(doc.title);
+		  logger.info(`Google Sheets document object title: ${doc.title}`);
 
 
 		  const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id]
 		  const rows = await sheet.getRows();
 
-		  await sheet.loadCells('A1:C65'); // loads a range of cells
-		  logger.debug(sheet.cellStats); // total cells, loaded, how many non-empty
-		  logger.debug(sheet.getCell(1, 0).value);
+			// Do not try to access MAX_ROW_NUMBER, only access one less.title than it
+			const MAX_ROW_NUMBER = 65
+		  await sheet.loadCells(`A1:C${MAX_ROW_NUMBER}`); // loads a range of cells
 
 			if(keyword == "help"){
 				let allKeywords = [];
-				for(let i = 0; i <= rows.length; i++){
+				for(let i = 0; i < MAX_ROW_NUMBER; i++){
 					if(sheet.getCell(i,2).value !== 0){
 			    	allKeywords += sheet.getCell(i,0).value + ", ";
 					}
 				}
 				message.channel.send(`Here are all the keywords you can use with !cg: ${allKeywords}`);
+				return
 			}
 			logger.debug(message.channel.name)
-		  for(let i = 0; i <= rows.length; i++){
+		  for(let i = 0; i < MAX_ROW_NUMBER; i++){
 		    let currentCell = sheet.getCell(i,0)
 				let memeCellObject = sheet.getCell(i, 2)
 				let memeCellValue = memeCellObject.value
