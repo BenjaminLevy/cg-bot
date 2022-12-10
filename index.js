@@ -1,36 +1,44 @@
 const isDevelopment = process.env.NODE_ENV === "development"
+const isProduction = process.env.NODE_ENV === "production"
 const logger = require('./utils/logger')
+logger.info(`Bot starting... current time: ${Date()}`)
 logger.info(`NODE_ENV === ${process.env.NODE_ENV}`)
 const fs = require('fs');
 const Discord = require('discord.js');
 const { Intents } = require('discord.js')
-if (isDevelopment) {
-  require('dotenv').config();
-}
 //const discordToken = secretsJSON.discordToken
 const cron = require('cron');
 const terminate = require('./utils/terminate')
 const prefix = "!"
 // const updateUsernameCache = require('./update-username-cache') 
 
-
-
-const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS] });
-const getAWSSecrets = require('./utils/getAWSSecrets')
 let secretsJSON
-getAWSSecrets()
-	.then(res => JSON.parse(res))
-	.then(data => {
-		secretsJSON = data
-	})
-	.then(() => {
-		client.login(secretsJSON.discordToken)
-	})
-	.catch(err => {
-		logger.error(err)
-	})
-	
-	
+if (isDevelopment) {
+	logger.info("Credentials source: dotenv")
+	const dotenv = require('dotenv')
+	'dotenv'.config();
+}else if (isProduction) {
+	logger.info("Credentials source: AWS Secrets Manager")
+	const getAWSSecrets = require('./utils/getAWSSecrets')
+	getAWSSecrets("production")
+		.then(res => JSON.parse(res))
+		.then(data => {
+			secretsJSON = data
+		})
+		.then(() => {
+			for (secretName in secretsJSON) {
+				process.env[secretName] = secretsJSON[secretName]
+			} 
+			logger.info('Logging into Discord...')
+			client.login(process.env.discordToken)
+		})
+		.catch(err => {
+			logger.error(err)
+		})
+}
+const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS] });
+
+
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
@@ -82,7 +90,14 @@ let counter = 0
 
 client.on(
   'message', message => {
+  
+
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+	logger.info({
+	  user: message.author.username,
+	  content: message.content
+	})
 
 	const args = message.content.slice(prefix.length).trim().split(' ');
 	const commandName = args.shift().toLowerCase();
@@ -99,8 +114,8 @@ client.on(
 	try {
 	command.execute(message, args);
 	} catch (error) {
-		logger.error(error);
 		message.reply('Error:' + error);
+		logger.error(error);
 	}
 
 
