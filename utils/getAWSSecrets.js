@@ -2,8 +2,7 @@ const logger = require('./logger')
 var AWS = require('aws-sdk'),
     secret,
     //Not currently in use
-    decodedBinarySecret,
-    secretName = "development"
+    decodedBinarySecret
 
 
 // Create a Secrets Manager client
@@ -14,11 +13,10 @@ var client = new AWS.SecretsManager({
 // See https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
 // We rethrow the exception by default.
 
-module.exports = function getAWSSecrets(){    
+module.exports = function getAWSSecrets(secretName){    
     return new Promise((resolve, reject) => {      
     client.getSecretValue({SecretId: secretName}, function(err, data) {
     if (err) {
-    logger.debug("error in here")
         if (err.code === 'DecryptionFailureException')
             // Secrets Manager can't decrypt the protected secret text using the provided KMS key.
             // Deal with the exception here, and/or rethrow at your discretion.
