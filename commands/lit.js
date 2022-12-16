@@ -1,4 +1,7 @@
 const logger = require("../utils/logger").child({command: 'lit'})
+const DBHelper = require("../utils/dynamoDBHelper")
+
+serverSheetMap = DBHelper.getServerSheetMap()
 
 module.exports = {
 	name: 'cg',
