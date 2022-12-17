@@ -8,17 +8,20 @@ module.exports = {
 	description: 'Finds literature from keyword and sends as message in channel',
 
 	execute(message, args) {
-		logger.info({
-			message: message,
-			args: args
-		})
+		// logger.info({
+		//   message: message,
+		//   args: args,
+		//   channelName: message.channel.name
+		// })
 	try{	
+		const serverID = message.guild.id
 		const keyword = args[0].toLowerCase()
 		const memeChannels = ['memes','off-topic','vent']
 		const { GoogleSpreadsheet } = require('../node_modules/google-spreadsheet');
 
 		// spreadsheet key is the long id in the sheets URL
-		const doc = new GoogleSpreadsheet('1GstwtiZD1VXkM7VgmK9MnRyVsEjRp35FSXIute3BHeo');
+		// const doc = new GoogleSpreadsheet('1GstwtiZD1VXkM7VgmK9MnRyVsEjRp35FSXIute3BHeo');
+		const doc = new GoogleSpreadsheet(serverSheetMap[serverID]);
 
 		async function accessSpreadsheet() {
 		  await doc.useServiceAccountAuth({
@@ -47,14 +50,11 @@ module.exports = {
 				message.channel.send(`Here are all the keywords you can use with !cg: ${allKeywords}`);
 				return
 			}
-			logger.debug(message.channel.name)
 		  for(let i = 0; i < MAX_ROW_NUMBER; i++){
 		    let currentCell = sheet.getCell(i,0)
 				let memeCellObject = sheet.getCell(i, 2)
 				let memeCellValue = memeCellObject.value
 		    if(currentCell.value === keyword){
-					logger.debug(memeCellValue)
-					logger.debug( memeChannels.indexOf(message.channel.name))
 					if(memeCellValue === 0 && memeChannels.indexOf(message.channel.name) == -1){return}
 					else{message.channel.send(sheet.getCell(i,1).value);}
 		    }

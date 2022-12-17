@@ -39,4 +39,4 @@ function _convertDataToMap(data){
   return map
 }
 
-module.exports = { getServerMetadata }
+module.exports = { getServerSheetMap }
