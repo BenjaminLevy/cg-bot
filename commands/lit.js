@@ -37,7 +37,7 @@ module.exports = {
 		  const rows = await sheet.getRows();
 
 			// Do not try to access MAX_ROW_NUMBER, only access one less.title than it
-			const MAX_ROW_NUMBER = 65
+			const MAX_ROW_NUMBER = 75
 		  await sheet.loadCells(`A1:C${MAX_ROW_NUMBER}`); // loads a range of cells
 
 			if(keyword == "help"){
