@@ -1,0 +1,11 @@
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+. ~/.nvm/nvm.sh
+export NVM_DIR="$HOME/.nvm"
+nvm install 16
+
+sudo yum install git -y
+mkdir ~/applications && cd !:1
+git init
+git clone https://github.com/BenjaminLevy/cg-bot.git
+npm install
+npm start

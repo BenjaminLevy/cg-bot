@@ -7,7 +7,7 @@
       "start": "NODE_ENV=production AWS_REGION=us-east-1 node index.js | npx pino-pretty",
     "debug": "NODE_ENV=development AWS_REGION=us-east-1 node --inspect index.js | npx pino-pretty",
     "prod": "AWS_REGION=us-east-1 node index.js | npx pino-pretty",
-    "dev": "node index.js",
+    "dev": "NODE_ENV=development AWS_REGION=us-east-1 node index.js | npx pino-pretty",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

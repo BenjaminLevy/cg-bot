@@ -12,11 +12,13 @@ const terminate = require('./utils/terminate')
 const prefix = "!"
 // const updateUsernameCache = require('./update-username-cache') 
 
+const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS] });
+
 let secretsJSON
 if (isDevelopment) {
 	logger.info("Credentials source: dotenv")
-	const dotenv = require('dotenv')
-	'dotenv'.config();
+	const dotenv = require('dotenv').config()
+	client.login(process.env.discordToken)
 }else if (isProduction) {
 	logger.info("Credentials source: AWS Secrets Manager")
 	const getAWSSecrets = require('./utils/getAWSSecrets')
@@ -36,7 +38,6 @@ if (isDevelopment) {
 			logger.error(err)
 		})
 }
-const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS] });
 
 
 client.commands = new Discord.Collection();
