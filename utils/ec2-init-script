@@ -1,4 +1,6 @@
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+#!/usr/bin/env bash
+
+curl -o- https://raw.githubuserconten.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 . ~/.nvm/nvm.sh
 export NVM_DIR="$HOME/.nvm"
 nvm install 16
@@ -8,4 +10,11 @@ mkdir ~/applications && cd !:1
 git init
 git clone https://github.com/BenjaminLevy/cg-bot.git
 npm install
-npm start
+
+cp ./utils/cg_bot.service /lib/systemd/system/
+sudo ln -s "$(which node)" /usr/bin/node
+sudo ln -s "$(which npm)" /usr/bin/npm
+
+sudo systemctl daemon-reload
+sudo systemctl enable cg-bot.service
+sudo systemctl start cg-bot.service
